@@ -11,7 +11,7 @@ from scipy.spatial.distance import pdist, squareform
 import time
 
 import cellscape
-from cellscape.util import amino_acid_3letter, group_by
+from cellscape.util import amino_acid_3letter, dna_3letter, group_by
 from cellscape.parse_uniprot_xml import parse_xml, download_uniprot_record
 from cellscape.parse_alignment import align_pair, overlap_from_alignment, sequence_overlap
 
@@ -210,9 +210,12 @@ class Structure:
                 res_id = res.get_full_id()[3][1]
                 if res.get_full_id()[3][0][0] == "H": # skip hetatm records
                     continue
-                if res.get_resname() not in amino_acid_3letter:
+                if res.get_resname() not in amino_acid_3letter+dna_3_letter:
                     continue
-                res_aa = amino_acid_3letter[res.get_resname()]
+                if res.get_resname() in amino_acid_3letter
+                    res_aa = amino_acid_3letter[res.get_resname()]
+                if res.get_resname() in dna_3letter
+                    res_aa = dna_3letter[res.get_resname()]
                 self.sequence[chain] += res_aa
                 residue_atoms = 0
                 these_atoms = []

@@ -23,6 +23,17 @@ amino_acid_3letter = {'ALA':'A',
 'TYR':'Y',
 'GLX':'Z'}
 
+dna_3_letter = {'A':'A',
+"DA":"DA",
+'U':'U',
+'DU':'DU',
+'G':'G',
+"DG":"DG",
+'T':'T',
+"DT":"DT",
+'C':'C',
+'DC': 'DC'}
+
 def group_by(l, key):
     """Take a list of dictionaries and group them according to a key."""
     d = dict()
