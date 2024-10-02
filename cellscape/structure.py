@@ -210,12 +210,16 @@ class Structure:
                 res_id = res.get_full_id()[3][1]
                 if res.get_full_id()[3][0][0] == "H": # skip hetatm records
                     continue
-                if res.get_resname() not in amino_acid_3letter+dna_3_letter:
+                if res.get_resname() not in list(amino_acid_3letter.keys())+list(dna_3letter.keys()):
                     continue
-                if res.get_resname() in amino_acid_3letter
+                is_aa = False
+                is_na = False
+                if res.get_resname() in amino_acid_3letter:
                     res_aa = amino_acid_3letter[res.get_resname()]
-                if res.get_resname() in dna_3letter
+                    is_aa = True
+                if res.get_resname() in dna_3letter:
                     res_aa = dna_3letter[res.get_resname()]
+                    is_na = True
                 self.sequence[chain] += res_aa
                 residue_atoms = 0
                 these_atoms = []
@@ -223,7 +227,12 @@ class Structure:
                 for a in res:
                     self.coord.append(list(a.get_vector()))
                     these_atoms.append(a.id) # tracking atom identities for now
-                    if a.id == "CA":
+                    if a.id == "CA" and is_aa:
+                        this_ca_atom = all_atoms
+                        self.ca_atoms.append(this_ca_atom)
+                    # we use O3' as a replacement for CA in nucleic acids, 
+                    # the first residue doesn't usually contain a P atom so this works better
+                    if a.id == "O3'" and is_na:
                         this_ca_atom = all_atoms
                         self.ca_atoms.append(this_ca_atom)
                     if a.id in ["CA", "N", "C", "O"]:
@@ -232,15 +241,15 @@ class Structure:
                     all_atoms += 1
                     residue_atoms += 1
                 self.residues[chain][res_id] = {
-                'chain':chain,
-                'id':res_id,
-                'amino_acid':res_aa,
-                'object':res,
-                'coord':(all_atoms-residue_atoms, all_atoms),
-                'coord_ca':(this_ca_atom, this_ca_atom+1),
-                'coord_backbone':np.array(backbone_atoms),
-                'atoms':np.array(these_atoms)
-                }
+                    'chain':chain,
+                    'id':res_id,
+                    'amino_acid':res_aa,
+                    'object':res,
+                    'coord':(all_atoms-residue_atoms, all_atoms),
+                    'coord_ca':(this_ca_atom, this_ca_atom+1),
+                    'coord_backbone':np.array(backbone_atoms),
+                    'atoms':np.array(these_atoms)
+                    }
         self.coord = np.array(self.coord)
         self.ca_atoms = np.array(self.ca_atoms).astype(int)
 

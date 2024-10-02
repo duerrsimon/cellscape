@@ -23,7 +23,7 @@ amino_acid_3letter = {'ALA':'A',
 'TYR':'Y',
 'GLX':'Z'}
 
-dna_3_letter = {'A':'A',
+dna_3letter = {'A':'A',
 "DA":"DA",
 'U':'U',
 'DU':'DU',
